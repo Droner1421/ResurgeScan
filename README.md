@@ -1,0 +1,2 @@
+# ResurgeScan
+sacan de manga

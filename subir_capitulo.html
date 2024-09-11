@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Subir Capítulo</title>
+    <style>
+        body { background-color: #333; color: white; font-family: Arial, sans-serif; }
+        #portadaManga { width: 150px; margin-bottom: 20px; }
+    </style>
+</head>
+<body>
+    <h1>Subir Capítulo</h1>
+
+    <label for="mangaSelect">Selecciona un Manga:</label><br>
+    <select id="mangaSelect" required>
+        <option value="">-- Selecciona un Manga --</option>
+    </select><br><br>
+
+    <div id="mangaInfo" style="display: none;">
+        <img id="portadaManga" src="" alt="Portada del Manga">
+        <p id="capitulosDisponibles"></p>
+    </div>
+
+    <form id="formCapitulo" style="display: none;">
+        <label for="numeroCapitulo">Número de Capítulo:</label><br>
+        <input type="number" id="numeroCapitulo" required><br>
+        <label for="numLinks">Número de Imágenes:</label><br>
+        <input type="number" id="numLinks" required><br>
+        <div id="linksContainer"></div>
+        <button type="submit">Guardar Capítulo</button>
+    </form>
+
+    <script>
+        const mangas = JSON.parse(localStorage.getItem('mangas')) || [];
+        const mangaSelect = document.getElementById('mangaSelect');
+        const mangaInfoDiv = document.getElementById('mangaInfo');
+        const portadaManga = document.getElementById('portadaManga');
+        const capitulosDisponibles = document.getElementById('capitulosDisponibles');
+        const formCapitulo = document.getElementById('formCapitulo');
+
+        // Cargar lista de mangas en el select
+        function cargarMangas() {
+            mangas.forEach((manga, index) => {
+                const option = document.createElement('option');
+                option.value = index;
+                option.textContent = manga.titulo;
+                mangaSelect.appendChild(option);
+            });
+        }
+
+        // Mostrar información del manga seleccionado
+        mangaSelect.addEventListener('change', function() {
+            const mangaIndex = this.value;
+            if (mangaIndex !== "") {
+                const manga = mangas[mangaIndex];
+                portadaManga.src = manga.portada;
+                capitulosDisponibles.textContent = `Capítulos disponibles: ${manga.capitulos.length}`;
+                mangaInfoDiv.style.display = 'block';
+                formCapitulo.style.display = 'block';
+            } else {
+                mangaInfoDiv.style.display = 'none';
+                formCapitulo.style.display = 'none';
+            }
+        });
+
+        // Crear campos para links según el número de imágenes
+        document.getElementById('numLinks').addEventListener('change', function() {
+            const linksContainer = document.getElementById('linksContainer');
+            linksContainer.innerHTML = '';
+            const numLinks = parseInt(this.value);
+            for (let i = 0; i < numLinks; i++) {
+                linksContainer.innerHTML += `<label for="link${i}">Imagen ${i+1}:</label><br><input type="url" id="link${i}" placeholder="URL de la imagen" required><br>`;
+            }
+        });
+
+        // Guardar el capítulo en el manga seleccionado
+        document.getElementById('formCapitulo').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const mangaIndex = mangaSelect.value;
+            const numeroCapitulo = document.getElementById('numeroCapitulo').value;
+            const numLinks = parseInt(document.getElementById('numLinks').value);
+            const links = [];
+            for (let i = 0; i < numLinks; i++) {
+                links.push(document.getElementById(`link${i}`).value);
+            }
+
+            const nuevoCapitulo = {
+                numero: numeroCapitulo,
+                links: links  // Guardar los enlaces como URLs de imágenes
+            };
+
+            // Añadir el nuevo capítulo al manga seleccionado
+            mangas[mangaIndex].capitulos.push(nuevoCapitulo);
+            localStorage.setItem('mangas', JSON.stringify(mangas));
+
+            alert('Capítulo subido exitosamente');
+            window.location.href = `detalle_manga.html?index=${mangaIndex}`;
+        });
+
+        cargarMangas();  // Cargar los mangas al cargar la página
+    </script>
+</body>
+</html>

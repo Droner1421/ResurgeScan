@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Crear Manga</title>
+    <style>
+        body { background-color: #333; color: white; font-family: Arial, sans-serif; }
+    </style>
+</head>
+<body>
+    <h1>Crear Manga</h1>
+    <form id="formManga">
+        <label for="titulo">Título:</label><br>
+        <input type="text" id="titulo" required><br>
+        <label for="descripcion">Descripción:</label><br>
+        <textarea id="descripcion" required></textarea><br>
+        <label for="portada">Link de la portada:</label><br>
+        <input type="url" id="portada" required><br>
+        <button type="submit">Guardar Manga</button>
+    </form>
+
+    <script>
+        const mangas = JSON.parse(localStorage.getItem('mangas')) || [];
+
+        document.getElementById('formManga').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const nuevoManga = {
+                titulo: document.getElementById('titulo').value,
+                descripcion: document.getElementById('descripcion').value,
+                portada: document.getElementById('portada').value,
+                capitulos: []
+            };
+            mangas.push(nuevoManga);
+            localStorage.setItem('mangas', JSON.stringify(mangas));
+            alert('Manga creado exitosamente');
+            window.location.href = 'index.html';
+        });
+    </script>
+</body>
+</html>

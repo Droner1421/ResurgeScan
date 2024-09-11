@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mangas Disponibles</title>
+    <style>
+        body {
+            background-color: #181818;
+            color: #fff;
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+
+        header {
+            background-color: #282828;
+            padding: 10px 0;
+            text-align: center;
+        }
+
+        h1 {
+            margin: 0;
+            font-size: 24px;
+        }
+
+        nav {
+            background-color: #383838;
+            padding: 10px 0;
+            text-align: center;
+        }
+
+        nav a {
+            color: #fff;
+            text-decoration: none;
+            margin: 0 10px;
+        }
+
+        nav a:hover {
+            text-decoration: underline;
+        }
+
+        .container {
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .manga-list {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 10px;
+            max-width: 1000px;
+        }
+
+        .manga {
+            background-color: #484848;
+            border-radius: 10px;
+            padding: 10px;
+            margin: 10px;
+            text-align: center;
+            max-width: 150px;
+            flex: 1 1 150px; /* Permite que las tarjetas se ajusten al tamaño y se alineen bien */
+        }
+
+        .manga img {
+            width: 100%;
+            border-radius: 10px;
+            height: auto; /* Mantiene la proporción de la imagen */
+        }
+
+        .manga h2 {
+            margin: 10px 0;
+            font-size: 16px; /* Tamaño más pequeño */
+        }
+
+        .manga p {
+            margin: 10px 0;
+            font-size: 12px; /* Tamaño más pequeño */
+        }
+
+        .manga a {
+            color: #fff;
+            text-decoration: none;
+            background-color: #383838;
+            padding: 5px;
+            border-radius: 5px;
+            display: inline-block;
+            font-size: 12px; /* Tamaño más pequeño */
+        }
+
+        .manga a:hover {
+            background-color: #484848;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>ResurgeScan</h1>
+    </header>
+    <nav>
+        <a href="#">HOME</a>
+        <a href="#">BIBLIOTECA</a>
+        <a href="#">CONTACTO</a>
+        <a href="#">Redes Sociales y Donaciones</a>
+        <a href="#">Advanced</a>
+    </nav>
+    <div class="container">
+        <h1>Mangas Disponibles</h1>
+        <div class="manga-list" id="mangas"></div>
+    </div>
+
+    <script>
+        // Cargar mangas desde localStorage
+        const mangas = JSON.parse(localStorage.getItem('mangas')) || [];
+
+        function mostrarMangas() {
+            const contenedorMangas = document.getElementById('mangas');
+            contenedorMangas.innerHTML = '';
+            mangas.forEach((manga, index) => {
+                const mangaDiv = document.createElement('div');
+                mangaDiv.classList.add('manga');
+                mangaDiv.innerHTML = `
+                    <img src="${manga.portada}" alt="${manga.titulo}">
+                    <h2>${manga.titulo}</h2>
+                    <a href="detalle_manga.html?index=${index}">Ver Manga</a>
+                `;
+                contenedorMangas.appendChild(mangaDiv);
+            });
+        }
+
+        mostrarMangas();
+    </script>
+</body>
+</html>

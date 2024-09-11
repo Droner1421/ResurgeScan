@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Eliminar Manga</title>
+    <style>
+        body {
+            background-color: #222;
+            color: #fff;
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+        
+        header {
+            background-color: #333;
+            padding: 20px;
+            text-align: center;
+        }
+        
+        header h1 {
+            margin: 0;
+        }
+        
+        nav {
+            margin-top: 10px;
+        }
+        
+        nav a {
+            color: #fff;
+            text-decoration: none;
+            margin: 0 15px;
+        }
+        
+        nav a:hover {
+            text-decoration: underline;
+        }
+        
+        main {
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .manga-list {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+        
+        .manga-item {
+            background-color: #333;
+            padding: 20px;
+            border-radius: 10px;
+            display: flex;
+            gap: 20px;
+            align-items: center;
+        }
+        
+        .manga-item img {
+            width: 150px;
+            height: auto;
+            border-radius: 10px;
+        }
+        
+        .manga-item h2 {
+            margin: 0;
+        }
+        
+        .manga-item button {
+            background-color: #f44336;
+            border: none;
+            color: white;
+            padding: 10px 20px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 16px;
+            margin: 4px 2px;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+        
+        .manga-item button:hover {
+            background-color: #c62828;
+        }
+        
+        footer {
+            background-color: #333;
+            color: #fff;
+            padding: 10px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Eliminar Manga</h1>
+        <nav>
+            <a href="index.html">Regresar</a>
+            <a href="crear_manga.html">Crear Manga</a>
+            <a href="subir_capitulo.html">Subir Capítulos</a>
+        </nav>
+    </header>
+
+    <main>
+        <div class="container">
+            <section id="manga-list">
+                <h2>Mangas Disponibles</h2>
+                <!-- Aquí se mostrarán los mangas con opciones para eliminar -->
+            </section>
+        </div>
+    </main>
+
+    <footer>
+        <p>&copy; 2024 MangaProject</p>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const mangaList = document.getElementById('manga-list');
+            const mangas = JSON.parse(localStorage.getItem('mangas')) || [];
+
+            if (mangas.length === 0) {
+                mangaList.innerHTML = '<p>No hay mangas disponibles para eliminar.</p>';
+            } else {
+                mangas.forEach((manga, index) => {
+                    const mangaArticle = document.createElement('div');
+                    mangaArticle.className = 'manga-item';
+                    mangaArticle.innerHTML = `
+                        <img src="${manga.portada}" alt="Portada del Manga">
+                        <div>
+                            <h2>${manga.titulo}</h2>
+                            <p>${manga.descripcion}</p>
+                            <button onclick="eliminarManga(${index})">Eliminar Manga</button>
+                        </div>
+                    `;
+                    mangaList.appendChild(mangaArticle);
+                });
+            }
+        });
+
+        function eliminarManga(index) {
+            const mangas = JSON.parse(localStorage.getItem('mangas')) || [];
+            if (index >= 0 && index < mangas.length) {
+                mangas.splice(index, 1);
+                localStorage.setItem('mangas', JSON.stringify(mangas));
+                window.location.reload();
+            }
+        }
+    </script>
+</body>
+</html>

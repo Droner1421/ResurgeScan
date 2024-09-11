@@ -1,0 +1,265 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+  <title>ResurgeScan</title>
+  <style>
+body {
+  background-color: #222;
+  color: #fff;
+  font-family: sans-serif;
+  margin: 0;
+  padding: 0;
+}
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px;
+}
+
+.header h1 {
+  margin: 0;
+}
+
+.header .nav {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 300px;
+}
+
+.header .nav a {
+  color: #fff;
+  text-decoration: none;
+  margin-right: 20px;
+}
+
+.header .nav a:hover {
+  text-decoration: underline;
+}
+a {
+    text-decoration: none;
+    color: #fff;
+}
+
+        a:hover {
+    text-decoration: none;
+    color: #fff;
+}
+
+.content {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 20px;
+}
+
+.manga {
+  background-color: #333;
+  padding: 20px;
+  border-radius: 10px;
+  width: 300px;
+}
+
+.manga img {
+  width: 100%;
+  border-radius: 10px;
+}
+
+.manga .title {
+  font-size: 24px;
+  font-weight: bold;
+  margin-top: 10px;
+}
+
+.manga .info {
+  margin-top: 10px;
+}
+
+.manga .buttons {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 20px;
+}
+
+.manga .buttons button {
+  padding: 10px;
+  border: 1px solid #fff;
+  border-radius: 5px;
+  color: #fff;
+  background-color: #333;
+  cursor: pointer;
+}
+
+.manga .buttons button:hover {
+  background-color: #444;
+}
+
+.details {
+  background-color: #333;
+  padding: 20px;
+  border-radius: 10px;
+  width: 700px;
+  margin-bottom: 20px;
+}
+
+.details .title {
+  font-size: 24px;
+  font-weight: bold;
+  margin-bottom: 10px;
+}
+
+.details .info {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 20px;
+}
+
+.details .info .label {
+  font-weight: bold;
+  margin-right: 5px;
+}
+
+.details .info .value {
+  margin-right: 10px;
+}
+
+.details .actions {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 20px;
+}
+
+.details .actions .comment h1 {
+  margin: 0;
+}
+
+.comments {
+  background-color: #333;
+  padding: 20px;
+  border-radius: 10px;
+  width: 100%;
+  margin-top: 20px;
+}
+
+.comments .title {
+  font-size: 24px;
+  font-weight: bold;
+  margin-bottom: 10px;
+}
+
+.comments .info {
+  display: flex;
+  flex-direction: column;
+}
+
+.comments .actions {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 20px;
+}
+
+.comments .actions .comment {
+  display: flex;
+  align-items: center;
+}
+
+.comments .actions .comment i {
+  margin-right: 5px;
+}
+</style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <h1>ResurgeScan</h1>
+      <div class="nav">
+        <a href="index.html">HOME</a>
+        <a href="#">BIBLIOTECA</a>
+        <a href="#">REDES SOCIALES</a>
+      </div>
+    </div>
+    <div class="content">
+      <div class="manga">
+        <div id="detalle">
+          <!-- Detalle del manga se mostrará aquí -->
+        </div>
+        <div class="buttons">
+          <button>Read First</button>
+          <button>Read Last</button>
+        </div>
+      </div>
+      <div class="details">
+        <div class="title" id="manga-titulo">
+          <!-- Título del manga se mostrará aquí -->
+        </div>
+        <div class="info">
+          <div class="label">Status</div>
+          <div class="value">OnGoing</div>
+        </div>
+        <div class="actions">
+          <div class="comment">
+            <h1>Capítulos</h1>
+            <div id="capitulos">
+              <!-- Capítulos se mostrarán aquí -->
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="comments">
+      <div class="title">Comentarios</div>
+      <div class="info">
+        Próximamente
+      </div>
+      <div class="actions">
+        <div class="comment">
+          <!-- Comentarios se mostrarán aquí -->
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <script>
+    const mangas = JSON.parse(localStorage.getItem('mangas')) || [];
+    const urlParams = new URLSearchParams(window.location.search);
+    const index = urlParams.get('index');
+    const manga = mangas[index];
+
+    function mostrarDetalleManga() {
+      const detalleDiv = document.getElementById('detalle');
+      detalleDiv.innerHTML = `
+        <img src="${manga.portada}" alt="Portada">
+        <h2>${manga.titulo}</h2>
+        <p>${manga.descripcion}</p>
+      `;
+    }
+
+    function mostrarCapitulos() {
+      const capitulosDiv = document.getElementById('capitulos');
+      capitulosDiv.innerHTML = `<h3>Capítulos Disponibles</h3>`;
+      manga.capitulos.forEach((capitulo, idx) => {
+        const capituloDiv = document.createElement('div');
+        capituloDiv.classList.add('capitulo');
+        capituloDiv.innerHTML = `<a href="leer_capitulo.html?manga=${index}&capitulo=${idx}">Leer Capítulo ${capitulo.numero}</a>`;
+        capitulosDiv.appendChild(capituloDiv);
+      });
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      mostrarDetalleManga();
+      mostrarCapitulos();
+    });
+  </script>
+</body>
+</html>

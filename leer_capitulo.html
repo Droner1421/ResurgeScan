@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Leer Capítulo</title>
+    <style>
+        body {
+            background-color: #222;
+            color: #fff;
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .header h1 {
+            margin: 0;
+        }
+
+        .header .nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 300px;
+        }
+
+        .header .nav a {
+            color: #fff;
+            text-decoration: none;
+            margin-right: 20px;
+        }
+
+        .header .nav a:hover {
+            text-decoration: underline;
+        }
+
+        .content {
+            margin-top: 20px;
+        }
+
+        .capitulo-imagen {
+            display: block;
+            margin: 0 auto;
+            width: 1110px; /* Establecer ancho específico */
+            height: 1826px; /* Establecer alto específico */
+            object-fit: cover; /* Mantener las proporciones */
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        }
+
+        .navigation {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 20px;
+        }
+
+        .navigation a {
+            padding: 10px 20px;
+            background-color: #333;
+            color: #fff;
+            text-decoration: none;
+            border-radius: 5px;
+            text-align: center;
+            width: 23%;
+            box-sizing: border-box;
+            display: inline-block;
+        }
+
+        .navigation a:hover {
+            background-color: #444;
+        }
+
+        .navigation .disabled {
+            background-color: #555;
+            cursor: not-allowed;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>ResurgeScan</h1>
+            <div class="nav">
+                <a href="index.php">Inicio</a>
+                <a href="biblioteca.php">Biblioteca</a>
+                <a id="mangaButton" href="#" class="navigation">Volver al Manga</a> 
+                <a id="backButton" href="#" class="back-button"></a>
+            </div>
+        </div>
+
+        <div class="content">
+            <div id="capituloInfo"></div>
+
+            <div class="navigation" id="navigationButtons">
+                <a href="#" id="prevChapter" class="disabled">Capítulo Anterior</a>
+                <a href="#" id="nextChapter" class="disabled">Siguiente Capítulo</a>
+            </div>
+
+            <script>
+                const mangas = JSON.parse(localStorage.getItem('mangas')) || [];
+                const urlParams = new URLSearchParams(window.location.search);
+                const mangaIndex = urlParams.get('manga');
+                const capituloIndex = urlParams.get('capitulo');
+
+                if (mangaIndex !== null && capituloIndex !== null) {
+                    const manga = mangas[mangaIndex];
+                    const capitulo = manga.capitulos[capituloIndex];
+
+                    const capituloInfoDiv = document.getElementById('capituloInfo');
+                    capituloInfoDiv.innerHTML = `
+                        <h2>${manga.titulo} - Capítulo ${capitulo.numero}</h2>
+                        <h3>Imágenes del capítulo:</h3>
+                        ${capitulo.links.map(link => `<img class="capitulo-imagen" src="${link}" alt="Imagen del capítulo ${capitulo.numero}">`).join('')}
+                    `;
+
+                    // Configurar navegación
+                    const prevChapterButton = document.getElementById('prevChapter');
+                    const nextChapterButton = document.getElementById('nextChapter');
+                    const backToMangaButton = document.getElementById('backButton');
+                    const mangaButton = document.getElementById('mangaButton');
+
+                    // Botón de capítulo anterior
+                    if (parseInt(capituloIndex) > 0) {
+                        const prevIndex = parseInt(capituloIndex) - 1;
+                        prevChapterButton.href = `leer_capitulo.html?manga=${mangaIndex}&capitulo=${prevIndex}`;
+                        prevChapterButton.classList.remove('disabled');
+                    }
+
+                    // Botón de siguiente capítulo
+                    if (parseInt(capituloIndex) < manga.capitulos.length - 1) {
+                        const nextIndex = parseInt(capituloIndex) + 1;
+                        nextChapterButton.href = `leer_capitulo.html?manga=${mangaIndex}&capitulo=${nextIndex}`;
+                        nextChapterButton.classList.remove('disabled');
+                    }
+
+                    // Configurar el botón "Volver al Manga"
+                    backToMangaButton.href = `ver_manga.php?index=${mangaIndex}`;
+
+                    // Configurar el botón "Manga"
+                    mangaButton.href = `detalle_manga.html?index=${mangaIndex}`;
+                } else {
+                    document.getElementById('capituloInfo').innerHTML = '<p>Error al cargar el capítulo.</p>';
+                }
+            </script>
+        </div>
+    </div>
+</body>
+</html>
